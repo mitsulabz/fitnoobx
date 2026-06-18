@@ -123,7 +123,7 @@
   function pct(a: number, b: number) { return b > 0 ? Math.min(100, Math.round(a/b*100)) : 0; }
   function fmt(n: number) { return (n > 0 ? '+' : '') + Math.round(n).toLocaleString('fr'); }
 
-  const BUILD = "V0.4";
+  const BUILD = "V0.5";
   const dateLabel = $derived(todayDate.toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long' }));
 
   let showModal = $state(false);
