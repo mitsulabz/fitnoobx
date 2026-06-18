@@ -123,6 +123,7 @@
   function pct(a: number, b: number) { return b > 0 ? Math.min(100, Math.round(a/b*100)) : 0; }
   function fmt(n: number) { return (n > 0 ? '+' : '') + Math.round(n).toLocaleString('fr'); }
 
+  const BUILD = "V0.4";
   const dateLabel = $derived(todayDate.toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long' }));
 
   let showModal = $state(false);
@@ -258,7 +259,7 @@
   <div class="header">
     <div>
       <div class="label">{$t.dashboard.today}</div>
-      <div class="date">{dateLabel}</div>
+      <div class="date">{dateLabel}<span class="build-tag">{BUILD}</span></div>
     </div>
     {#if totalDays > 0}
     <div class="day-badge">J{dayNum ?? '?'}<span>/{totalDays}</span></div>
@@ -458,7 +459,8 @@
 
 <style>
 .header { display:flex; align-items:center; justify-content:space-between; padding:20px 0 16px; }
-.date { font-size:20px; font-weight:500; color:var(--c-text); margin-top:3px; letter-spacing:-0.3px; text-transform:capitalize; }
+.date { font-size:20px; font-weight:500; color:var(--c-text); margin-top:3px; letter-spacing:-0.3px; text-transform:capitalize; display:flex; align-items:baseline; gap:8px; }
+.build-tag { font-size:11px; font-weight:500; color:var(--c-text3); letter-spacing:0; text-transform:none; }
 .day-badge { font-size:13px; font-weight:600; color:var(--c-text2); }
 .day-badge span { font-weight:400; color:var(--c-text3); }
 .hero-row { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px; }
