@@ -126,7 +126,7 @@ html, body {
 .nav-label { font-size: 9px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; }
 
 .scroll-area {
-  padding: 0 16px calc(80px + env(safe-area-inset-bottom));
+  padding: env(safe-area-inset-top, 44px) 16px calc(90px + env(safe-area-inset-bottom));
   min-height: 100vh;
 }
 .scroll-area::-webkit-scrollbar { display: none; }
