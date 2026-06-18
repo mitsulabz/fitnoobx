@@ -19,15 +19,19 @@
 {:else if !$user}
   <AuthGate />
 {:else}
-  {#if $activeTab === "dashboard"}<Dashboard />{/if}
-  {#if $activeTab === "journal"}<Journal />{/if}
-  {#if $activeTab === "stats"}
-    <div class="scroll-area"><div style="padding:40px 0;text-align:center;color:var(--c-text3)">Stats — bientôt</div></div>
+  {#if $activeTab === "suivi"}<Dashboard />{/if}
+  {#if $activeTab === "programme"}<Journal />{/if}
+  {#if $activeTab === "aliments"}
+    <div class="scroll-area"><div class="placeholder">Aliments — bientôt</div></div>
   {/if}
-  {#if $activeTab === "settings"}<Settings />{/if}
+  {#if $activeTab === "amis"}
+    <div class="scroll-area"><div class="placeholder">Amis — bientôt</div></div>
+  {/if}
+  {#if $activeTab === "reglages"}<Settings />{/if}
   <BottomNav />
 {/if}
 
 <style>
 .loading { flex:1; display:flex; align-items:center; justify-content:center; color:var(--c-text3); font-size:14px; }
+.placeholder { padding:60px 0; text-align:center; color:var(--c-text3); font-size:14px; }
 </style>

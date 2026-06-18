@@ -3,7 +3,7 @@ import type { Locale } from './i18n';
 import { createI18n } from './i18n';
 
 export type Theme = 'light' | 'dark';
-export type Tab = 'dashboard' | 'journal' | 'stats' | 'settings';
+export type Tab = 'suivi' | 'programme' | 'aliments' | 'amis' | 'reglages';
 
 const savedTheme = (localStorage.getItem('fitpro_theme') as Theme) || 'dark';
 export const theme = writable<Theme>(savedTheme);
@@ -18,6 +18,6 @@ locale.subscribe(l => localStorage.setItem('fitpro_locale', l));
 
 export const t = derived(locale, $l => createI18n($l));
 
-export const activeTab = writable<Tab>('dashboard');
+export const activeTab = writable<Tab>('suivi');
 export const user = writable<{ email: string; id: string } | null>(null);
 export const authLoading = writable(true);

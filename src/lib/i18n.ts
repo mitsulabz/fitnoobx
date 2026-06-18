@@ -1,7 +1,13 @@
 export type Locale = 'fr' | 'en';
 
 const fr = {
-  nav: { dashboard: 'Bilan', journal: 'Journal', stats: 'Stats', settings: 'Réglages' },
+  nav: {
+    suivi: 'Suivi',
+    programme: 'Programme',
+    aliments: 'Aliments',
+    amis: 'Amis',
+    reglages: 'Réglages',
+  },
   dashboard: {
     today: "Aujourd'hui",
     deficit_day: 'Déficit du jour',
@@ -42,7 +48,13 @@ const fr = {
 };
 
 const en: typeof fr = {
-  nav: { dashboard: 'Dashboard', journal: 'Journal', stats: 'Stats', settings: 'Settings' },
+  nav: {
+    suivi: 'Dashboard',
+    programme: 'Programme',
+    aliments: 'Foods',
+    amis: 'Friends',
+    reglages: 'Settings',
+  },
   dashboard: {
     today: 'Today',
     deficit_day: "Today's deficit",
