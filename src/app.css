@@ -48,9 +48,10 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  overflow: hidden;
+  margin: 0;
+  height: 100%;
+  overscroll-behavior-y: none;
+  -webkit-text-size-adjust: 100%;
   font-family: var(--font);
   background: var(--c-bg);
   color: var(--c-text);
@@ -59,8 +60,8 @@ html, body {
 }
 
 #app {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
+  height: 100vh;
+  height: 100svh;
   max-width: 430px;
   margin: 0 auto;
   overflow: hidden;
@@ -130,6 +131,7 @@ html, body {
   overflow-y: auto;
   padding: 0 16px 24px;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
 }
 .scroll-area::-webkit-scrollbar { display: none; }
 
