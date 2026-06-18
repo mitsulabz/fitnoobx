@@ -6,7 +6,7 @@ const fr = {
     programme: 'Programme',
     aliments: 'Aliments',
     amis: 'Amis',
-    reglages: 'Réglages',
+    reglages: 'Profil',
   },
   dashboard: {
     today: "Aujourd'hui",

@@ -1,32 +1,49 @@
 <script lang="ts">
   import { theme, activeTab, session, authLoading, appData, persistSession, restoreSession, t } from "./lib/store";
-  import { loadAppState } from "./lib/supabase";
+  import { loadAppState, refreshToken, upsertProfile } from "./lib/supabase";
   import AuthGate from "./lib/AuthGate.svelte";
   import BottomNav from "./lib/BottomNav.svelte";
   import Dashboard from "./lib/Dashboard.svelte";
-  import Journal from "./lib/Journal.svelte";
+  import Programme from "./lib/Programme.svelte";
+  import Aliments from "./lib/Aliments.svelte";
+  import Amis from "./lib/Amis.svelte";
   import Settings from "./lib/Settings.svelte";
   import { get } from "svelte/store";
   import { onMount } from "svelte";
 
   document.documentElement.setAttribute("data-theme", get(theme));
 
+  async function loadData(s: typeof $session) {
+    if (!s) return;
+    const data = await loadAppState(s.access_token, s.user.id);
+    if (data) {
+      appData.set(data);
+      upsertProfile(s.access_token, s.user.id, s.user.email);
+    } else {
+      try {
+        const newSession = await refreshToken(s.refresh_token);
+        persistSession(newSession);
+        const retryData = await loadAppState(newSession.access_token, newSession.user.id);
+        appData.set(retryData);
+      } catch {
+        persistSession(null);
+      }
+    }
+  }
+
   onMount(async () => {
     const saved = restoreSession();
     if (saved) {
       session.set(saved);
-      const data = await loadAppState(saved.access_token);
-      appData.set(data);
+      await loadData(saved);
     }
     authLoading.set(false);
   });
 
-  // When session changes, load app data
+  let firstRun = true;
   session.subscribe(async (s) => {
-    if (s) {
-      const data = await loadAppState(s.access_token);
-      appData.set(data);
-    }
+    if (firstRun) { firstRun = false; return; }
+    await loadData(s);
   });
 </script>
 
@@ -36,12 +53,12 @@
   <AuthGate />
 {:else}
   {#if $activeTab === "suivi"}<Dashboard />{/if}
-  {#if $activeTab === "programme"}<Journal />{/if}
+  {#if $activeTab === "programme"}<Programme />{/if}
   {#if $activeTab === "aliments"}
-    <div class="scroll-area"><div class="placeholder">Aliments — bientôt</div></div>
+    <Aliments />
   {/if}
   {#if $activeTab === "amis"}
-    <div class="scroll-area"><div class="placeholder">Amis — bientôt</div></div>
+    <Amis />
   {/if}
   {#if $activeTab === "reglages"}<Settings />{/if}
   <BottomNav />
