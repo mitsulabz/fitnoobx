@@ -47,9 +47,15 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html, body {
+html {
   height: 100dvh;
-  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  height: 100dvh;
+  overflow: hidden;
+  overscroll-behavior: none;
   font-family: var(--font);
   background: var(--c-bg);
   color: var(--c-text);
@@ -58,10 +64,13 @@ html, body {
 }
 
 #app {
-  height: 100%;
+  height: 100dvh;
   max-width: 430px;
   margin: 0 auto;
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   overflow: hidden;
   display: flex;
   flex-direction: column;
