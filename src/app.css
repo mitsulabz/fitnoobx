@@ -48,6 +48,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body {
+  height: 100dvh;
   height: 100%;
   font-family: var(--font);
   background: var(--c-bg);
