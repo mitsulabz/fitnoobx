@@ -1,22 +1,38 @@
 <script lang="ts">
-  import { theme, activeTab, user, authLoading, t } from "./lib/store";
+  import { theme, activeTab, session, authLoading, appData, persistSession, restoreSession, t } from "./lib/store";
+  import { loadAppState } from "./lib/supabase";
   import AuthGate from "./lib/AuthGate.svelte";
   import BottomNav from "./lib/BottomNav.svelte";
   import Dashboard from "./lib/Dashboard.svelte";
   import Journal from "./lib/Journal.svelte";
   import Settings from "./lib/Settings.svelte";
   import { get } from "svelte/store";
+  import { onMount } from "svelte";
 
   document.documentElement.setAttribute("data-theme", get(theme));
 
-  // Dev mode — skip auth
-  authLoading.set(false);
-  user.set({ email: "demo@fitpro.app", id: "demo" });
+  onMount(async () => {
+    const saved = restoreSession();
+    if (saved) {
+      session.set(saved);
+      const data = await loadAppState(saved.access_token);
+      appData.set(data);
+    }
+    authLoading.set(false);
+  });
+
+  // When session changes, load app data
+  session.subscribe(async (s) => {
+    if (s) {
+      const data = await loadAppState(s.access_token);
+      appData.set(data);
+    }
+  });
 </script>
 
 {#if $authLoading}
   <div class="loading">{$t.common.loading}</div>
-{:else if !$user}
+{:else if !$session}
   <AuthGate />
 {:else}
   {#if $activeTab === "suivi"}<Dashboard />{/if}
