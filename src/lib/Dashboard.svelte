@@ -68,11 +68,11 @@
   // Macro sums for a day
   function macros(day: any) {
     const foods = day?.foods ?? [];
-    return {
-      p: foods.reduce((s: number, f: any) => s + num(f.p), 0),
-      g: foods.reduce((s: number, f: any) => s + num(f.g), 0),
-      l: foods.reduce((s: number, f: any) => s + num(f.l), 0),
-    };
+    const p = foods.reduce((s: number, f: any) => s + num(f.p), 0);
+    const g = foods.reduce((s: number, f: any) => s + num(f.g), 0);
+    const l = foods.reduce((s: number, f: any) => s + num(f.l), 0);
+    const pc = p * 4, gc = g * 4, lc = l * 9, t = (pc + gc + lc) || 1;
+    return { p, g, l, pc, gc, lc, t };
   }
 
   function save(newData: any) {
