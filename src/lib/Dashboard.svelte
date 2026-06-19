@@ -161,7 +161,7 @@
   </div>
 
   {#if isSophie}
-    <div class="card greeting-card">bonjour Sophie!</div>
+    <div class="card greeting-card">n'oublies pas de mettre les calories du coulant au chocolat🤓</div>
   {/if}
 
   <!-- Barre de progression objectif -->
