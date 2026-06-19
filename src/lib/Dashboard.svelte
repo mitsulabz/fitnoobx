@@ -9,7 +9,7 @@
     dayKcal, dayExpend, dstr, frDate, frShort, parseDS
   } from './calc';
 
-  const BUILD = 'V1.9';
+  const BUILD = 'V2.0';
   const SUPABASE_URL = 'https://arydsxswhbgpfayjgtak.supabase.co';
 
   const today = new Date();
@@ -291,4 +291,15 @@
   :global(html[data-theme='light']) .coach-btn { background:#FFC2DF; border-color:#FFC2DF; color:#1a1a1a; }
   :global(html[data-theme='light']) .hero-eat { background:#79E8B3; border-color:rgba(0,0,0,0.05); }
   :global(html[data-theme='light']) .hero-goal { background:#BBEFFF; border-color:rgba(0,0,0,0.05); }
+
+  /* Texte noir sur cellules colorées (clair) */
+  :global(html[data-theme='light']) .prog-card .prog-label,
+  :global(html[data-theme='light']) .prog-card .prog-sub,
+  :global(html[data-theme='light']) .hero-eat .hero-label,
+  :global(html[data-theme='light']) .hero-eat .hero-val,
+  :global(html[data-theme='light']) .hero-eat .hero-unit,
+  :global(html[data-theme='light']) .hero-eat .hero-sub,
+  :global(html[data-theme='light']) .hero-goal .hero-label,
+  :global(html[data-theme='light']) .hero-goal .hero-goal-val,
+  :global(html[data-theme='light']) .hero-goal .hero-sub { color:#1a1a1a; }
 </style>
