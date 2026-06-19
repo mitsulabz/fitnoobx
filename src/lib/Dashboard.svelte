@@ -53,13 +53,21 @@
   }
 
   // Recent days for history (last 14 with data + today)
-  const recentDays = $derived((() => {
-    const result: string[] = [todayKey];
-    const past = [...allKeys].reverse().filter(k => k !== todayKey).slice(0, 30);
-    for (const k of past) {
-      const d = days[k];
-      if (d?.foods?.length || d?.weight || d?.sport) result.push(k);
-      if (result.length >= 15) break;
+  const recentDays = ((() => {
+    const seen = new Set<string>();
+    const result: string[] = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+      const k = dstr(d);
+      seen.add(k);
+      result.push(k);
+    }
+    const older = [...allKeys].reverse().filter(k => !seen.has(k));
+    for (const k of older) {
+      const day = days[k];
+      if (day?.foods?.length || day?.weight || day?.sport) result.push(k);
+      if (result.length >= 21) break;
     }
     return result;
   })());
