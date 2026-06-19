@@ -9,7 +9,7 @@
     dayKcal, dayExpend, dstr, frDate, frShort, parseDS
   } from './calc';
 
-  const BUILD = 'V2.4';
+  const BUILD = 'V2.5';
   const SUPABASE_URL = 'https://arydsxswhbgpfayjgtak.supabase.co';
 
   const today = new Date();
@@ -287,10 +287,10 @@
   .add-food-btn { width:100%; padding:14px 16px; border:none; border-top:1px dashed var(--c-border); background:transparent; color:var(--c-accent); font-size:14px; font-weight:600; cursor:pointer; font-family:var(--font); text-align:center; border-radius:0; }
 
   /* Fonds pastel — mode clair uniquement */
-  :global(html[data-theme='light']) .prog-card { background:#C3B2F2; border-color:rgba(0,0,0,0.05); }
-  :global(html[data-theme='light']) .coach-btn { background:#F77FC9; border-color:#F77FC9; color:#1a1a1a; }
-  :global(html[data-theme='light']) .hero-eat { background:#74D69E; border-color:rgba(0,0,0,0.05); }
-  :global(html[data-theme='light']) .hero-goal { background:#6CC5F0; border-color:rgba(0,0,0,0.05); }
+  :global(html[data-theme='light']) .prog-card { background:#FFE98A; border-color:rgba(0,0,0,0.05); }
+  :global(html[data-theme='light']) .coach-btn { background:#FFC2DF; border-color:#FFC2DF; color:#1a1a1a; }
+  :global(html[data-theme='light']) .hero-eat { background:#79E8B3; border-color:rgba(0,0,0,0.05); }
+  :global(html[data-theme='light']) .hero-goal { background:#BBEFFF; border-color:rgba(0,0,0,0.05); }
 
   /* Texte noir sur cellules colorées (clair) */
   :global(html[data-theme='light']) .prog-card .prog-label,
