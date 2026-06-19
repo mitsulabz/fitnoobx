@@ -9,7 +9,7 @@
     dayKcal, dayExpend, dstr, frDate, frShort, parseDS
   } from './calc';
 
-  const BUILD = 'V2.0';
+  const BUILD = 'V2.1';
   const SUPABASE_URL = 'https://arydsxswhbgpfayjgtak.supabase.co';
 
   const today = new Date();
@@ -170,17 +170,6 @@
     </div>
   {/if}
 
-  <!-- Bouton coach -->
-  <button class="coach-btn card" onclick={runCoach} disabled={coachLoading}>
-    🤖 <strong>{coachLoading ? 'Analyse en cours…' : 'Demander un bilan au coach'}</strong>
-  </button>
-  {#if coachOpen && (coachResult || coachError)}
-    <div class="card coach-result">
-      {#if coachResult}{coachResult}{/if}
-      {#if coachError}<span class="coach-err">{coachError}</span>{/if}
-    </div>
-  {/if}
-
   <!-- Hero cards -->
   <div class="hero-row">
     <div class="card hero-card hero-eat">
@@ -196,6 +185,17 @@
       {#if goal}<div class="hero-sub">à −{goal.rate} kcal/j</div>{/if}
     </div>
   </div>
+
+  <!-- Bouton coach -->
+  <button class="coach-btn card" onclick={runCoach} disabled={coachLoading}>
+    🤖 <strong>{coachLoading ? 'Analyse en cours…' : 'Demander un bilan au coach'}</strong>
+  </button>
+  {#if coachOpen && (coachResult || coachError)}
+    <div class="card coach-result">
+      {#if coachResult}{coachResult}{/if}
+      {#if coachError}<span class="coach-err">{coachError}</span>{/if}
+    </div>
+  {/if}
 
   <!-- Day cards -->
   {#each recentDays as ds}
