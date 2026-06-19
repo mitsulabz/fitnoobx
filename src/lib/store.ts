@@ -1,24 +1,17 @@
 import { writable, derived } from 'svelte/store';
-import type { Locale } from './i18n';
-import { createI18n } from './i18n';
+import { saveAppState } from './supabase';
 import type { Session } from './supabase';
 
 export type Theme = 'light' | 'dark';
-export type Tab = 'suivi' | 'programme' | 'aliments' | 'amis' | 'reglages';
+export type Tab = 'suivi' | 'aliments' | 'amis' | 'reglages';
 
 // Theme
-const savedTheme = (localStorage.getItem('fitpro_theme') as Theme) || 'dark';
+const savedTheme = (localStorage.getItem('fitnoob_theme') as Theme) || 'dark';
 export const theme = writable<Theme>(savedTheme);
 theme.subscribe(t => {
   document.documentElement.setAttribute('data-theme', t);
-  localStorage.setItem('fitpro_theme', t);
+  localStorage.setItem('fitnoob_theme', t);
 });
-
-// Locale
-const savedLocale = (localStorage.getItem('fitpro_locale') as Locale) || 'fr';
-export const locale = writable<Locale>(savedLocale);
-locale.subscribe(l => localStorage.setItem('fitpro_locale', l));
-export const t = derived(locale, $l => createI18n($l));
 
 // Navigation
 export const activeTab = writable<Tab>('suivi');
@@ -27,19 +20,44 @@ export const activeTab = writable<Tab>('suivi');
 export const session = writable<Session | null>(null);
 export const authLoading = writable(true);
 
-// App data (programme + jours)
+// Full Supabase row (for merging fitnoobx namespace)
+export const rawRow = writable<Record<string, unknown>>({});
+
+// App data — FitNoob format: { profile, days, favorites, sports, _ts }
 export const appData = writable<Record<string, unknown> | null>(null);
 
-// Persist session in localStorage
 export function persistSession(s: Session | null) {
-  if (s) localStorage.setItem('fitpro_session', JSON.stringify(s));
-  else localStorage.removeItem('fitpro_session');
+  if (s) localStorage.setItem('fitnoob_session', JSON.stringify(s));
+  else localStorage.removeItem('fitnoob_session');
   session.set(s);
 }
 
 export function restoreSession(): Session | null {
   try {
-    const raw = localStorage.getItem('fitpro_session');
+    const raw = localStorage.getItem('fitnoob_session');
     return raw ? JSON.parse(raw) : null;
   } catch { return null; }
+}
+
+// Persist FitNoobX data — merges under rawRow.fitnoobx to avoid clobbering FitProUX data
+let _syncTimer: ReturnType<typeof setTimeout> | null = null;
+
+import { get } from 'svelte/store';
+
+export function scheduleSync(s: Session, data: unknown) {
+  if (_syncTimer) clearTimeout(_syncTimer);
+  _syncTimer = setTimeout(() => {
+    const current = get(rawRow);
+    const merged = { ...current, fitnoobx: data };
+    rawRow.set(merged);
+    saveAppState(s.access_token, s.user.id, merged);
+  }, 1500);
+}
+
+export function syncNow(s: Session, data: unknown) {
+  if (_syncTimer) clearTimeout(_syncTimer);
+  const current = get(rawRow);
+  const merged = { ...current, fitnoobx: data };
+  rawRow.set(merged);
+  saveAppState(s.access_token, s.user.id, merged);
 }

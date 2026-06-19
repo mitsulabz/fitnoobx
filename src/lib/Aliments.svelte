@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { appData, session } from './store';
-  import { saveAppState } from './supabase';
-  import { get } from 'svelte/store';
+  import { appData, session, scheduleSync } from './store';
+    import { get } from 'svelte/store';
 
   const favorites = $derived(
     [...(Array.isArray(($appData as any)?.favorites) ? ($appData as any).favorites : [])]
@@ -20,7 +19,7 @@
     favs.splice(realIdx, 1);
     const newData = { ...data, favorites: favs };
     appData.set(newData);
-    saveAppState(s.access_token, s.user.id, newData);
+    scheduleSync(s, newData);
   }
 </script>
 

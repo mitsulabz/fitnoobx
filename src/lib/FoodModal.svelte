@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { appData, session, persistSession } from './store';
-  import { saveAppState, refreshToken } from './supabase';
+  import { appData, session, scheduleSync } from './store';
+  import { refreshToken } from './supabase';
   import { get } from 'svelte/store';
 
 
@@ -9,7 +9,6 @@
     if (!s) return null;
     try {
       const fresh = await refreshToken(s.refresh_token);
-      persistSession(fresh);
       return fresh.access_token;
     } catch {
       return s.access_token;
@@ -78,7 +77,7 @@
 
     const newData = { ...data, favorites: favs, days: { ...days, [dayKey]: { ...day, foods } } };
     appData.set(newData);
-    saveAppState(s.access_token, s.user.id, newData);
+    scheduleSync(s, newData);
     onclose();
   }
 
