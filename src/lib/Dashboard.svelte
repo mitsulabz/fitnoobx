@@ -9,7 +9,7 @@
     dayKcal, dayExpend, dstr, frDate, frShort, parseDS
   } from './calc';
 
-  const BUILD = 'V1.7';
+  const BUILD = 'V1.8';
   const SUPABASE_URL = 'https://arydsxswhbgpfayjgtak.supabase.co';
 
   const today = new Date();
@@ -183,14 +183,14 @@
 
   <!-- Hero cards -->
   <div class="hero-row">
-    <div class="card hero-card">
+    <div class="card hero-card hero-eat">
       <div class="hero-label">À MANGER AUJOURD'HUI</div>
       <div class="hero-val">{todayTarget}<span class="hero-unit">kcal</span></div>
       <div class="hero-sub" class:over={todayReste < 0}>
         {todayReste < 0 ? 'Dépassé de ' + Math.abs(Math.round(todayReste)) + ' kcal' : 'Reste ' + Math.round(todayReste) + ' kcal'}
       </div>
     </div>
-    <div class="card hero-card">
+    <div class="card hero-card hero-goal">
       <div class="hero-label">DATE OBJECTIF</div>
       <div class="hero-goal-val">{goalDateStr}</div>
       {#if goal}<div class="hero-sub">à −{goal.rate} kcal/j</div>{/if}
@@ -285,4 +285,10 @@
   .del-btn { border:none; background:none; color:var(--c-text3); font-size:18px; cursor:pointer; padding:0 2px; line-height:1; flex-shrink:0; }
 
   .add-food-btn { width:100%; padding:14px 16px; border:none; border-top:1px dashed var(--c-border); background:transparent; color:var(--c-accent); font-size:14px; font-weight:600; cursor:pointer; font-family:var(--font); text-align:center; border-radius:0; }
+
+  /* Fonds pastel — mode clair uniquement */
+  :global(html[data-theme='light']) .prog-card { background:#C5C5FF; border-color:rgba(0,0,0,0.05); }
+  :global(html[data-theme='light']) .coach-btn { background:#FFC2DF; border-color:#FFA4D4; color:#1a1a1a; }
+  :global(html[data-theme='light']) .hero-eat { background:#FFCC99; border-color:rgba(0,0,0,0.05); }
+  :global(html[data-theme='light']) .hero-goal { background:#BBEFFF; border-color:rgba(0,0,0,0.05); }
 </style>
