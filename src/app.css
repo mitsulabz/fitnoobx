@@ -47,15 +47,9 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html {
-  height: 100%;
-  overflow: hidden;
-}
-body {
+html, body {
   margin: 0;
-  height: 100%;
-  overflow: hidden;
-  overscroll-behavior: none;
+  overscroll-behavior-y: none;
   -webkit-text-size-adjust: 100%;
   font-family: var(--font);
   background: var(--c-bg);
@@ -66,7 +60,6 @@ body {
 }
 
 #app {
-  height: 100%;
   max-width: 430px;
   margin: 0 auto;
   background: var(--c-bg);
@@ -109,8 +102,7 @@ body {
   display: flex;
   background: var(--c-surface);
   border-top: 0.5px solid var(--c-border);
-  padding: 4px 0;
-  padding-bottom: max(4px, env(safe-area-inset-bottom));
+  padding: 4px 0 env(safe-area-inset-bottom, 0px);
   z-index: 30;
   max-width: 430px;
   margin: 0 auto;
@@ -134,12 +126,8 @@ body {
 .nav-label { font-size: 9px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; }
 
 .scroll-area {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  bottom: calc(56px + env(safe-area-inset-bottom));
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: max(16px, env(safe-area-inset-top)) 16px 16px;
+  padding: max(16px, env(safe-area-inset-top)) 16px calc(80px + env(safe-area-inset-bottom));
+  min-height: 100vh;
 }
 .scroll-area::-webkit-scrollbar { display: none; }
 
