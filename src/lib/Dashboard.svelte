@@ -121,16 +121,6 @@
   }
 
   // Sport kcal input
-  let sportTimers: Record<string, ReturnType<typeof setTimeout>> = {};
-  function onSportInput(ds: string, kcal: string) {
-    clearTimeout(sportTimers[ds]);
-    sportTimers[ds] = setTimeout(() => {
-      const d = get(appData) as any;
-      const day = getOrCreateDay(ds);
-      const sport = kcal ? { name: 'Sport', kcal: parseInt(kcal) || 0 } : null;
-      save({ ...d, days: { ...d.days, [ds]: { ...day, sport } } });
-    }, 600);
-  }
 </script>
 
 <div class="scroll-area">
@@ -267,19 +257,6 @@
         </div>
       {/if}
 
-      <!-- Sport extra -->
-      <div class="sport-row">
-        <span class="sport-icon">🏃</span>
-        <input
-          type="number" placeholder="Sport extra (kcal)" min="0" max="5000" step="10"
-          value={day.sport?.kcal || ''}
-          oninput={(e) => onSportInput(ds, (e.target as HTMLInputElement).value)}
-          class="sport-input"
-        />
-        {#if day.sport?.kcal}
-          <span class="sport-badge">+{day.sport.kcal} kcal brûlés</span>
-        {/if}
-      </div>
 
       <!-- Add food button -->
       <button class="add-food-btn btn-accent" onclick={() => openModal(ds)}>
@@ -368,11 +345,6 @@
   .food-kcal { font-size:12px; color:var(--c-text2); flex-shrink:0; }
   .del-btn { border:none; background:none; color:var(--c-text3); font-size:16px; cursor:pointer; padding:0 2px; line-height:1; flex-shrink:0; }
 
-  /* Sport */
-  .sport-row { display:flex; align-items:center; gap:8px; }
-  .sport-icon { font-size:14px; }
-  .sport-input { flex:1; padding:7px 10px; border:1px solid var(--c-border); border-radius:var(--r-md); background:var(--c-surface); color:var(--c-text); font-size:13px; font-family:var(--font); }
-  .sport-badge { font-size:11px; color:var(--c-accent); font-weight:600; white-space:nowrap; }
 
   /* Add food */
   .add-food-btn { width:100%; padding:10px; border:none; border-radius:var(--r-md); background:var(--c-accent); color:var(--c-accent-fg); font-size:14px; font-weight:600; cursor:pointer; font-family:var(--font); }
