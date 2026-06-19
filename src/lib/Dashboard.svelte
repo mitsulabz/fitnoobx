@@ -5,7 +5,7 @@
   import { onMount } from 'svelte';
   import {
     ACT_LEVELS, num, calcBMR, calcTDEE, targetIntake, goalCalc,
-    dayKcal, dayExpend, dstr, frDate, frShort, parseDS, deficitFor
+    dayKcal, dayExpend, dstr, frDate, frShort, parseDS, round1
   } from './calc';
 
   const BUILD = 'V1.0';

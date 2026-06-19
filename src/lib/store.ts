@@ -1,4 +1,4 @@
-import { writable, derived } from 'svelte/store';
+import { writable, derived, get } from 'svelte/store';
 import { saveAppState } from './supabase';
 import type { Session } from './supabase';
 
@@ -42,7 +42,6 @@ export function restoreSession(): Session | null {
 // Persist FitNoobX data — merges under rawRow.fitnoobx to avoid clobbering FitProUX data
 let _syncTimer: ReturnType<typeof setTimeout> | null = null;
 
-import { get } from 'svelte/store';
 
 export function scheduleSync(s: Session, data: unknown) {
   if (_syncTimer) clearTimeout(_syncTimer);
