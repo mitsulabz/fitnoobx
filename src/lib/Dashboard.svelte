@@ -9,7 +9,7 @@
     dayKcal, dayExpend, dstr, frDate, frShort, parseDS
   } from './calc';
 
-  const BUILD = 'V2.2';
+  const BUILD = 'V2.3';
   const SUPABASE_URL = 'https://arydsxswhbgpfayjgtak.supabase.co';
 
   const today = new Date();
@@ -173,10 +173,10 @@
   <!-- Hero cards -->
   <div class="hero-row">
     <div class="card hero-card hero-eat">
-      <div class="hero-label">À MANGER AUJOURD'HUI</div>
+      <div class="hero-label">JOURNÉE À</div>
       <div class="hero-val">{todayTarget}<span class="hero-unit">kcal</span></div>
       <div class="hero-sub" class:over={todayReste < 0}>
-        {todayReste < 0 ? 'Dépassé de ' + Math.abs(Math.round(todayReste)) + ' kcal' : 'Reste ' + Math.round(todayReste) + ' kcal'}
+        {todayReste < 0 ? 'dépassé de ' + Math.abs(Math.round(todayReste)) + ' kcal' : 'reste ' + Math.round(todayReste) + ' kcal à manger'}
       </div>
     </div>
     <div class="card hero-card hero-goal">
@@ -247,7 +247,7 @@
   /* Progression */
   .prog-card { margin-bottom:8px; display:flex; flex-direction:column; gap:8px; }
   .prog-top { display:flex; align-items:center; justify-content:space-between; }
-  .prog-label { font-size:11px; font-weight:600; letter-spacing:.07em; color:var(--c-text3); text-transform:uppercase; }
+  .prog-label { font-size:14px; font-weight:700; letter-spacing:.05em; color:var(--c-text3); text-transform:uppercase; }
   .prog-badge { background:var(--c-accent); color:var(--c-accent-fg); font-size:12px; font-weight:700; padding:3px 9px; border-radius:20px; }
   .prog-bg { height:6px; background:var(--c-surface2); border-radius:3px; overflow:hidden; }
   .prog-fill { height:100%; background:var(--c-accent); border-radius:3px; transition:width .4s; }
@@ -265,8 +265,8 @@
   .hero-label { font-size:11px; font-weight:600; letter-spacing:.07em; color:var(--c-text3); text-transform:uppercase; }
   .hero-val { font-size:26px; font-weight:700; color:var(--c-text); line-height:1.1; }
   .hero-unit { font-size:13px; font-weight:400; color:var(--c-text2); margin-left:2px; }
-  .hero-goal-val { font-size:22px; font-weight:700; color:var(--c-text); line-height:1.1; }
-  .hero-sub { font-size:13px; color:var(--c-accent); font-weight:500; }
+  .hero-goal-val { font-size:26px; font-weight:700; color:var(--c-text); line-height:1.1; }
+  .hero-sub { font-size:13px; color:var(--c-accent); font-weight:500; margin-top:auto; }
   .hero-sub.over { color:#e05; }
 
   /* Day cards */
