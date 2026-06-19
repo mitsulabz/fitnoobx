@@ -20,7 +20,7 @@
   type Food = { n: string; k: number; p: number; g: number; l: number };
   type OFFProd = { n: string; k100: number; p100: number; g100: number; l100: number };
 
-  let { todayKey: dayKey, onclose }: { dayKey: string; onclose: () => void } = $props();
+  let { dayKey, onclose }: { dayKey: string; onclose: () => void } = $props();
 
   let tab = $state<'search' | 'scan' | 'favorites' | 'manual' | 'ai'>('search');
 
@@ -76,7 +76,7 @@
       favs.unshift({ name: food.n, per: '100', kcal: Math.round(food.k), p: +food.p.toFixed(1), g: +food.g.toFixed(1), l: +food.l.toFixed(1), img: '' });
     }
 
-    const newData = { ...data, favorites: favs, days: { ...days, [todayKey]: { ...day, foods } } };
+    const newData = { ...data, favorites: favs, days: { ...days, [dayKey]: { ...day, foods } } };
     appData.set(newData);
     saveAppState(s.access_token, s.user.id, newData);
     onclose();
