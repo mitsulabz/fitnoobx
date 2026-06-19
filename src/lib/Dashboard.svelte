@@ -234,11 +234,10 @@
       <!-- Macro bar -->
       {#if kcal > 0}
         <div class="macro-bar-wrap">
-          {@const pc = m.p * 4, gc = m.g * 4, lc = m.l * 9, t = (pc + gc + lc) || 1}
           <div class="macro-bar">
-            <div class="mb-p" style="width:{pc/t*100}%"></div>
-            <div class="mb-g" style="width:{gc/t*100}%"></div>
-            <div class="mb-l" style="width:{lc/t*100}%"></div>
+            <div class="mb-p" style="width:{m.pc/m.t*100}%"></div>
+            <div class="mb-g" style="width:{m.gc/m.t*100}%"></div>
+            <div class="mb-l" style="width:{m.lc/m.t*100}%"></div>
           </div>
           <div class="macro-legend">
             <span><span class="dot p"></span>P {round1(m.p)}g</span>
