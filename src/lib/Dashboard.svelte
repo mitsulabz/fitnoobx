@@ -5,8 +5,8 @@
   import FoodModal from './FoodModal.svelte';
   import { get } from 'svelte/store';
   import {
-    ACT_LEVELS, num, calcBMR, calcTDEE, targetIntake, goalCalc,
-    dayKcal, dayExpend, dstr, frDate, frShort, parseDS, round1
+    num, calcBMR, calcTDEE, targetIntake, goalCalc,
+    dayKcal, dayExpend, dstr, frDate, frShort, parseDS
   } from './calc';
 
   const BUILD = 'V1.1';
@@ -121,14 +121,6 @@
     return result;
   })());
 
-  function macros(day: any) {
-    const foods = day?.foods ?? [];
-    const p = foods.reduce((s: number, f: any) => s + num(f.p), 0);
-    const g = foods.reduce((s: number, f: any) => s + num(f.g), 0);
-    const l = foods.reduce((s: number, f: any) => s + num(f.l), 0);
-    const pc = p * 4, gc = g * 4, lc = l * 9, t = (pc + gc + lc) || 1;
-    return { p, g, l, pc, gc, lc, t };
-  }
 
   function save(newData: any) {
     const s = get(session);
@@ -137,17 +129,7 @@
     scheduleSync(s, newData);
   }
 
-  function getOrCreateDay(ds: string) {
-    const d = get(appData) as any;
-    const existing = d?.days?.[ds] ?? {};
-    return { weight: '', act: profile.act || '1.30', sport: null, foods: [], ...existing };
-  }
 
-  function updateDay(ds: string, patch: Record<string, unknown>) {
-    const d = get(appData) as any;
-    const day = getOrCreateDay(ds);
-    save({ ...d, days: { ...d.days, [ds]: { ...day, ...patch } } });
-  }
 
   function removeFood(dk: string, idx: number) {
     const d = get(appData) as any;
@@ -214,36 +196,35 @@
 
   <!-- Day cards -->
   {#each recentDays as ds}
-    {@const day = days[ds] ?? { weight: '', act: profile.act || '1.30', sport: null, foods: [] }}
+    {@const day = days[ds] ?? { foods: [] }}
     {@const isToday = ds === todayKey}
     {@const kcal = dayKcal(day)}
     {@const target = todayTarget}
-    {@const reste = target - kcal}
-    {@const m = macros(day)}
-    {@const pct = target > 0 ? Math.min(100, Math.round(kcal / target * 100)) : 0}
 
     <div class="day-card card" class:today={isToday}>
       <div class="day-header">
-        <div class="day-label">
-          {#if isToday}<span class="today-badge">Aujourd'hui</span>{/if}
-          <span class="day-date">{frDate(ds)}</span>
-        </div>
-        <div class="weight-field">
-          <input type="number" placeholder="— kg" step="0.1" min="30" max="300"
-            value={day.weight || ''}
-            oninput={(e) => onWeightInput(ds, (e.target as HTMLInputElement).value)}
-          />
-          <span class="weight-unit">kg</span>
-        </div>
+        <span class="day-date">{isToday ? 'Auj. ' : ''}{frDate(ds)}</span>
+        <span class="day-kcal" class:over={kcal > target && kcal > 0}>
+          {#if kcal > 0}{Math.round(kcal)} kcal{/if}
+          {#if target > 0}<span class="day-target"> / {target}</span>{/if}
+        </span>
       </div>
 
-      <select class="act-select"
-        value={day.act || profile.act || '1.30'}
-        onchange={(e) => updateDay(ds, { act: (e.target as HTMLSelectElement).value })}
-      >
-        {#each ACT_LEVELS as lvl}
-          <option value={lvl.key}>{lvl.label}</option>
-        {/each}
+      {#if day.foods?.length}
+        <div class="foods-list">
+          {#each day.foods as food, i}
+            <div class="food-item">
+              <span class="food-name">{food.n}</span>
+              <span class="food-kcal">{Math.round(food.k)} kcal</span>
+              <button class="del-btn" onclick={() => removeFood(ds, i)}>×</button>
+            </div>
+          {/each}
+        </div>
+      {/if}
+
+      <button class="add-food-btn" onclick={() => openModal(ds)}>+ Ajouter un aliment</button>
+    </div>
+  {/each}
       </select>
 
       <div class="cal-summary">
@@ -332,46 +313,19 @@
   .hero-sub.over { color:#e05; }
 
   /* Day cards */
-  .day-card { margin-bottom:10px; display:flex; flex-direction:column; gap:10px; }
-  .day-card.today { border-color:var(--c-accent); border-width:1px; }
-  .day-header { display:flex; align-items:center; justify-content:space-between; }
-  .day-label { display:flex; align-items:center; gap:6px; }
-  .today-badge { background:var(--c-accent); color:var(--c-accent-fg); font-size:10px; font-weight:700; padding:2px 7px; border-radius:10px; text-transform:uppercase; }
-  .day-date { font-size:13px; font-weight:600; color:var(--c-text); }
-  .weight-field { display:flex; align-items:center; gap:4px; }
-  .weight-field input { width:56px; padding:4px 6px; border:1px solid var(--c-border); border-radius:8px; background:var(--c-bg); color:var(--c-text); font-size:13px; text-align:center; font-family:var(--font); }
-  .weight-unit { font-size:12px; color:var(--c-text3); }
+  .day-card { margin-bottom:10px; display:flex; flex-direction:column; gap:0; padding:0; overflow:hidden; }
+  .day-card.today { border-color:var(--c-accent); }
+  .day-header { display:flex; align-items:center; justify-content:space-between; padding:14px 16px 12px; }
+  .day-date { font-size:15px; font-weight:600; color:var(--c-text); }
+  .day-kcal { font-size:15px; font-weight:700; color:var(--c-text); }
+  .day-kcal.over { color:#e05; }
+  .day-target { font-size:13px; font-weight:400; color:var(--c-text3); }
 
-  .act-select { width:100%; padding:8px 10px; border:1px solid var(--c-border); border-radius:var(--r-md); background:var(--c-surface); color:var(--c-text); font-size:13px; font-family:var(--font); appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 10px center; }
+  .foods-list { display:flex; flex-direction:column; }
+  .food-item { display:flex; align-items:center; gap:8px; padding:10px 16px; border-top:0.5px solid var(--c-border); }
+  .food-name { flex:1; font-size:14px; color:var(--c-text); }
+  .food-kcal { font-size:14px; color:var(--c-text2); flex-shrink:0; }
+  .del-btn { border:none; background:none; color:var(--c-text3); font-size:18px; cursor:pointer; padding:0 2px; line-height:1; flex-shrink:0; }
 
-  .cal-summary { display:flex; align-items:center; gap:8px; }
-  .cal-item { display:flex; flex-direction:column; align-items:center; }
-  .cal-val { font-size:18px; font-weight:700; color:var(--c-text); }
-  .cal-label { font-size:10px; color:var(--c-text3); text-transform:uppercase; letter-spacing:.05em; }
-  .cal-item.over .cal-val { color:#e05; }
-  .cal-sep { color:var(--c-border); font-size:18px; padding:0 4px; }
-
-  .progress-bg { height:6px; background:var(--c-surface2); border-radius:3px; overflow:hidden; }
-  .progress-fill { height:100%; background:var(--c-accent); border-radius:3px; transition:width .3s; }
-  .progress-fill.over { background:#e05; }
-
-  .macro-bar-wrap { display:flex; flex-direction:column; gap:4px; }
-  .macro-bar { height:6px; border-radius:3px; overflow:hidden; display:flex; }
-  .mb-p { background:#5b9cf6; }
-  .mb-g { background:#f5a623; }
-  .mb-l { background:#e05; }
-  .macro-legend { display:flex; gap:10px; }
-  .macro-legend span { display:flex; align-items:center; gap:3px; font-size:11px; color:var(--c-text2); }
-  .dot { display:inline-block; width:7px; height:7px; border-radius:50%; }
-  .dot.p { background:#5b9cf6; }
-  .dot.g { background:#f5a623; }
-  .dot.l { background:#e05; }
-
-  .foods-list { display:flex; flex-direction:column; gap:4px; }
-  .food-item { display:flex; align-items:center; gap:8px; padding:6px 10px; background:var(--c-surface2); border-radius:8px; }
-  .food-name { flex:1; font-size:12px; color:var(--c-text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .food-kcal { font-size:12px; color:var(--c-text2); flex-shrink:0; }
-  .del-btn { border:none; background:none; color:var(--c-text3); font-size:16px; cursor:pointer; padding:0 2px; line-height:1; flex-shrink:0; }
-
-  .add-food-btn { width:100%; padding:10px; border:none; border-radius:var(--r-md); background:var(--c-accent); color:var(--c-accent-fg); font-size:14px; font-weight:600; cursor:pointer; font-family:var(--font); }
+  .add-food-btn { width:100%; padding:14px 16px; border:none; border-top:1px dashed var(--c-border); background:transparent; color:var(--c-accent); font-size:14px; font-weight:600; cursor:pointer; font-family:var(--font); text-align:center; border-radius:0; }
 </style>
