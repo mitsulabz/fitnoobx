@@ -29,6 +29,10 @@
   const profile = $derived(data.profile ?? {});
   const days = $derived(data.days ?? {});
 
+  // Message de bienvenue personnalisé
+  const userEmail = $derived(($session?.user?.email ?? '').toLowerCase());
+  const isSophie = $derived(userEmail === 'ninagundaz2@gmail.com');
+
   // Today
   const todayDay = $derived(days[todayKey] ?? { weight: '', act: profile.act || '1.30', sport: null, foods: [] });
   const todayKcal = $derived(dayKcal(todayDay));
@@ -156,6 +160,10 @@
     <div class="header-title">FitNoob<span class="x">X</span></div>
   </div>
 
+  {#if isSophie}
+    <div class="card greeting-card">bonjour Sophie!</div>
+  {/if}
+
   <!-- Barre de progression objectif -->
   {#if goal}
     <div class="card prog-card">
@@ -243,6 +251,8 @@
   .reload-btn:active { color:var(--c-accent); }
   .header-title { font-size:22px; font-weight:700; color:var(--c-text); letter-spacing:-0.5px; }
   .x { color:var(--c-accent); }
+
+  .greeting-card { margin-bottom:8px; font-size:18px; font-weight:700; color:var(--c-text); }
 
   /* Progression */
   .prog-card { margin-bottom:8px; display:flex; flex-direction:column; gap:8px; }
