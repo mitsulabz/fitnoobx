@@ -225,54 +225,6 @@
       <button class="add-food-btn" onclick={() => openModal(ds)}>+ Ajouter un aliment</button>
     </div>
   {/each}
-      </select>
-
-      <div class="cal-summary">
-        <div class="cal-item"><span class="cal-val">{target}</span><span class="cal-label">cible</span></div>
-        <div class="cal-sep">·</div>
-        <div class="cal-item"><span class="cal-val">{Math.round(kcal)}</span><span class="cal-label">mangé</span></div>
-        <div class="cal-sep">·</div>
-        <div class="cal-item" class:over={reste < 0}>
-          <span class="cal-val">{reste < 0 ? '+' + Math.abs(Math.round(reste)) : Math.round(reste)}</span>
-          <span class="cal-label">{reste < 0 ? 'dépassé' : 'reste'}</span>
-        </div>
-      </div>
-
-      {#if target > 0}
-        <div class="progress-bg"><div class="progress-fill" style="width:{pct}%" class:over={pct >= 100}></div></div>
-      {/if}
-
-      {#if kcal > 0}
-        <div class="macro-bar-wrap">
-          <div class="macro-bar">
-            <div class="mb-p" style="width:{m.pc/m.t*100}%"></div>
-            <div class="mb-g" style="width:{m.gc/m.t*100}%"></div>
-            <div class="mb-l" style="width:{m.lc/m.t*100}%"></div>
-          </div>
-          <div class="macro-legend">
-            <span><span class="dot p"></span>P {round1(m.p)}g</span>
-            <span><span class="dot g"></span>G {round1(m.g)}g</span>
-            <span><span class="dot l"></span>L {round1(m.l)}g</span>
-          </div>
-        </div>
-      {/if}
-
-      {#if day.foods?.length}
-        <div class="foods-list">
-          {#each day.foods as food, i}
-            <div class="food-item">
-              <span class="food-name">{food.n}</span>
-              <span class="food-kcal">{Math.round(food.k)} kcal</span>
-              <button class="del-btn" onclick={() => removeFood(ds, i)}>×</button>
-            </div>
-          {/each}
-        </div>
-      {/if}
-
-      <button class="add-food-btn" onclick={() => openModal(ds)}>+ Ajouter un aliment</button>
-    </div>
-  {/each}
-
   <div style="height:8px"></div>
 </div>
 
