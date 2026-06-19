@@ -9,7 +9,7 @@
     dayKcal, dayExpend, dstr, frDate, frShort, parseDS
   } from './calc';
 
-  const BUILD = 'V2.1';
+  const BUILD = 'V2.2';
   const SUPABASE_URL = 'https://arydsxswhbgpfayjgtak.supabase.co';
 
   const today = new Date();
@@ -251,7 +251,7 @@
   .prog-badge { background:var(--c-accent); color:var(--c-accent-fg); font-size:12px; font-weight:700; padding:3px 9px; border-radius:20px; }
   .prog-bg { height:6px; background:var(--c-surface2); border-radius:3px; overflow:hidden; }
   .prog-fill { height:100%; background:var(--c-accent); border-radius:3px; transition:width .4s; }
-  .prog-sub { font-size:12px; color:var(--c-text3); }
+  .prog-sub { font-size:13px; color:var(--c-text3); }
 
   /* Coach */
   .coach-btn { width:100%; padding:16px; border:2px solid var(--c-accent); border-radius:var(--r-md); background:transparent; color:var(--c-accent); font-size:15px; cursor:pointer; font-family:var(--font); margin-bottom:8px; text-align:center; }
@@ -262,11 +262,11 @@
   /* Hero */
   .hero-row { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px; }
   .hero-card { display:flex; flex-direction:column; gap:4px; }
-  .hero-label { font-size:10px; font-weight:600; letter-spacing:.07em; color:var(--c-text3); text-transform:uppercase; }
-  .hero-val { font-size:32px; font-weight:700; color:var(--c-text); line-height:1; }
-  .hero-unit { font-size:14px; font-weight:400; color:var(--c-text2); margin-left:2px; }
-  .hero-goal-val { font-size:16px; font-weight:700; color:var(--c-text); line-height:1.2; margin-top:4px; }
-  .hero-sub { font-size:12px; color:var(--c-accent); font-weight:500; }
+  .hero-label { font-size:11px; font-weight:600; letter-spacing:.07em; color:var(--c-text3); text-transform:uppercase; }
+  .hero-val { font-size:26px; font-weight:700; color:var(--c-text); line-height:1.1; }
+  .hero-unit { font-size:13px; font-weight:400; color:var(--c-text2); margin-left:2px; }
+  .hero-goal-val { font-size:22px; font-weight:700; color:var(--c-text); line-height:1.1; }
+  .hero-sub { font-size:13px; color:var(--c-accent); font-weight:500; }
   .hero-sub.over { color:#e05; }
 
   /* Day cards */
