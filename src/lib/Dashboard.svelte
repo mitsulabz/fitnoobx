@@ -9,7 +9,7 @@
     dayKcal, dayExpend, dstr, frDate, frShort, parseDS
   } from './calc';
 
-  const BUILD = 'V1.8';
+  const BUILD = 'V1.9';
   const SUPABASE_URL = 'https://arydsxswhbgpfayjgtak.supabase.co';
 
   const today = new Date();
@@ -287,8 +287,8 @@
   .add-food-btn { width:100%; padding:14px 16px; border:none; border-top:1px dashed var(--c-border); background:transparent; color:var(--c-accent); font-size:14px; font-weight:600; cursor:pointer; font-family:var(--font); text-align:center; border-radius:0; }
 
   /* Fonds pastel — mode clair uniquement */
-  :global(html[data-theme='light']) .prog-card { background:#C5C5FF; border-color:rgba(0,0,0,0.05); }
-  :global(html[data-theme='light']) .coach-btn { background:#FFC2DF; border-color:#FFA4D4; color:#1a1a1a; }
-  :global(html[data-theme='light']) .hero-eat { background:#FFCC99; border-color:rgba(0,0,0,0.05); }
+  :global(html[data-theme='light']) .prog-card { background:#FFE98A; border-color:rgba(0,0,0,0.05); }
+  :global(html[data-theme='light']) .coach-btn { background:#FFC2DF; border-color:#FFC2DF; color:#1a1a1a; }
+  :global(html[data-theme='light']) .hero-eat { background:#79E8B3; border-color:rgba(0,0,0,0.05); }
   :global(html[data-theme='light']) .hero-goal { background:#BBEFFF; border-color:rgba(0,0,0,0.05); }
 </style>
