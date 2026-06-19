@@ -9,7 +9,7 @@
     dayKcal, dayExpend, dstr, frDate, frShort, parseDS
   } from './calc';
 
-  const BUILD = 'V1.6';
+  const BUILD = 'V1.7';
   const SUPABASE_URL = 'https://arydsxswhbgpfayjgtak.supabase.co';
 
   const today = new Date();
@@ -150,7 +150,9 @@
 <div class="scroll-area">
   <!-- Header -->
   <div class="header">
-    <div class="header-date">{todayLabel} <span class="build">{BUILD}</span></div>
+    <div class="header-date">{todayLabel} <span class="build">{BUILD}</span>
+      <button class="reload-btn" onclick={() => location.reload()} aria-label="Recharger">↻</button>
+    </div>
     <div class="header-title">FitNoob<span class="x">X</span></div>
   </div>
 
@@ -237,6 +239,8 @@
   .header { padding:20px 0 12px; display:flex; align-items:baseline; justify-content:space-between; }
   .header-date { font-size:13px; color:var(--c-text3); }
   .build { font-size:11px; color:var(--c-text3); margin-left:4px; }
+  .reload-btn { background:none; border:none; color:var(--c-text3); font-size:14px; line-height:1; padding:0 4px; margin-left:2px; cursor:pointer; vertical-align:middle; }
+  .reload-btn:active { color:var(--c-accent); }
   .header-title { font-size:22px; font-weight:700; color:var(--c-text); letter-spacing:-0.5px; }
   .x { color:var(--c-accent); }
 
