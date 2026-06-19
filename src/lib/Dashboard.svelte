@@ -9,7 +9,7 @@
     dayKcal, dayExpend, dstr, frDate, frShort, parseDS
   } from './calc';
 
-  const BUILD = 'V1.4';
+  const BUILD = 'V1.5';
   const SUPABASE_URL = 'https://arydsxswhbgpfayjgtak.supabase.co';
 
   const today = new Date();
@@ -49,13 +49,6 @@
   const progPct = $derived(goal && goal.kcalToLose > 0
     ? Math.max(0, Math.min(100, Math.round(cumDeficit / goal.kcalToLose * 100)))
     : 0);
-
-  // Jours estimés total & écoulés depuis premier jour logué
-  const totalDays = $derived(goal && goal.rate > 0 ? Math.round(goal.kcalToLose / goal.rate) : 0);
-  const firstKey = $derived(allKeys.find(k => { const d = days[k]; return d?.foods?.length || d?.weight; }));
-  const daysElapsed = $derived(firstKey
-    ? Math.round((today.getTime() - parseDS(firstKey).getTime()) / 86400000) + 1
-    : 1);
 
   // Date d'atteinte de l'objectif
   const goalDateStr = $derived((() => {
@@ -163,7 +156,7 @@
       <div class="prog-bg">
         <div class="prog-fill" style="width:{progPct}%"></div>
       </div>
-      <div class="prog-sub">J{daysElapsed} sur {totalDays || '?'} · objectif {profile.goalMode === 'bf' ? profile.bft + '% MG' : Math.round(goal.goalWeight) + ' kg'}</div>
+      <div class="prog-sub">{Math.max(0, Math.round(cumDeficit)).toLocaleString('fr-FR')} sur {Math.round(goal.kcalToLose).toLocaleString('fr-FR')} kcal brûlées · objectif {profile.goalMode === 'bf' ? profile.bft + '% MG' : Math.round(goal.goalWeight) + ' kg'}</div>
     </div>
   {/if}
 
