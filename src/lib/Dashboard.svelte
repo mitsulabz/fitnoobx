@@ -1,6 +1,7 @@
 <script lang="ts">
   import { appData, session, scheduleSync } from './store';
-  import { refreshToken, persistSession } from './supabase';
+  import { refreshToken } from './supabase';
+  import { persistSession } from './store';
   import FoodModal from './FoodModal.svelte';
   import { get } from 'svelte/store';
   import {
