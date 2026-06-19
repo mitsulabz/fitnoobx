@@ -1,6 +1,5 @@
 <script lang="ts">
   import { appData, session, scheduleSync, syncNow } from './store';
-  import { refreshToken, persistSession } from './supabase';
   import FoodModal from './FoodModal.svelte';
   import { get } from 'svelte/store';
   import { onMount } from 'svelte';
