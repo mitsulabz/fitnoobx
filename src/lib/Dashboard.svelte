@@ -9,7 +9,7 @@
     dayKcal, dayExpend, dstr, frDate, frShort, parseDS
   } from './calc';
 
-  const BUILD = 'V2.6';
+  const BUILD = 'V2.7';
   const SUPABASE_URL = 'https://arydsxswhbgpfayjgtak.supabase.co';
 
   const today = new Date();
@@ -18,6 +18,10 @@
     const WD = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
     const MO = ['jan','fév','mar','avr','mai','juin','juil','aoû','sep','oct','nov','déc'];
     return WD[today.getDay()] + ' ' + today.getDate() + ' ' + MO[today.getMonth()];
+  })();
+  const todayFull = (() => {
+    const s = today.toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long' });
+    return s.charAt(0).toUpperCase() + s.slice(1);
   })();
 
   // Food modal
@@ -168,8 +172,11 @@
 <div class="scroll-area">
   <!-- Header -->
   <div class="header">
-    <div class="header-date">{todayLabel} <span class="build">{BUILD}</span>
-      <button class="reload-btn" onclick={() => location.reload()} aria-label="Recharger">↻</button>
+    <div>
+      <div class="header-eyebrow">AUJOURD'HUI</div>
+      <div class="header-date">{todayFull}<span class="build">{BUILD}</span>
+        <button class="reload-btn" onclick={() => location.reload()} aria-label="Recharger">↻</button>
+      </div>
     </div>
     <div class="header-title">FitNoob<span class="x">X</span></div>
   </div>
@@ -272,8 +279,8 @@
 {/if}
 
 <style>
-  .header { padding:20px 0 12px; display:flex; align-items:baseline; justify-content:space-between; }
-  .header-date { font-size:13px; color:var(--c-text3); }
+  .header { padding:20px 0 12px; display:flex; align-items:center; justify-content:space-between; }
+  .header-date { font-size:20px; font-weight:500; color:var(--c-text); letter-spacing:-0.3px; display:flex; align-items:baseline; gap:8px; }
   .build { font-size:11px; color:var(--c-text3); margin-left:4px; }
   .reload-btn { background:none; border:none; color:var(--c-text3); font-size:14px; line-height:1; padding:0 4px; margin-left:2px; cursor:pointer; vertical-align:middle; }
   .reload-btn:active { color:var(--c-accent); }
@@ -345,4 +352,7 @@
   .macro-card { padding:14px; }
   .macro-val { font-size:18px; font-weight:600; color:var(--c-text); }
   .macro-target { font-size:11px; font-weight:400; color:var(--c-text3); }
+
+  .header-eyebrow { font-size:11px; font-weight:600; letter-spacing:.07em; color:var(--c-text3); text-transform:uppercase; }
+  .build { font-size:11px !important; }
 </style>
