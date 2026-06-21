@@ -9,7 +9,7 @@
     dayKcal, dayExpend, dstr, frDate, frShort, parseDS
   } from './calc';
 
-  const BUILD = 'V2.7';
+  const BUILD = 'V2.8';
   const SUPABASE_URL = 'https://arydsxswhbgpfayjgtak.supabase.co';
 
   const today = new Date();
@@ -240,35 +240,51 @@
     {/each}
   </div>
 
-  <!-- Day cards -->
-  {#each recentDays as ds}
-    {@const day = days[ds] ?? { foods: [] }}
-    {@const isToday = ds === todayKey}
-    {@const kcal = dayKcal(day)}
-    {@const target = todayTarget}
-
-    <div class="day-card card" class:today={isToday}>
-      <div class="day-header">
-        <span class="day-date">{isToday ? 'Auj. ' : ''}{frDate(ds)}</span>
-        <span class="day-kcal" class:over={kcal > target && kcal > 0}>
-          {#if kcal > 0}{Math.round(kcal)} kcal{/if}
-          {#if target > 0}<span class="day-target"> / {target}</span>{/if}
-        </span>
+  <!-- Repas du jour -->
+  <div class="card foods-card">
+    <div class="foods-header">
+      <span class="label">Repas du jour</span>
+      <button class="add-pill" onclick={() => openModal(todayKey)}>+ Ajouter</button>
+    </div>
+    {#if (days[todayKey]?.foods?.length ?? 0) === 0}
+      <div class="foods-empty">Rien de loggé — ajoute ton premier repas !</div>
+    {:else}
+      <div class="foods-list">
+        {#each days[todayKey].foods as food, i}
+          <div class="food-item">
+            <span class="food-n">{food.n}</span>
+            <span class="food-k">{Math.round(food.k)} kcal</span>
+            <button class="food-del" onclick={() => removeFood(todayKey, i)} aria-label="Supprimer">×</button>
+          </div>
+        {/each}
+        <div class="foods-total"><span>Total</span><span class="total-k">{Math.round(todayKcal)} kcal</span></div>
       </div>
+    {/if}
+  </div>
 
-      {#if day.foods?.length}
-        <div class="foods-list">
-          {#each day.foods as food, i}
-            <div class="food-item">
-              <span class="food-name">{food.n}</span>
-              <span class="food-kcal">{Math.round(food.k)} kcal</span>
-              <button class="del-btn" onclick={() => removeFood(ds, i)}>×</button>
-            </div>
-          {/each}
-        </div>
-      {/if}
-
-      <button class="add-food-btn" onclick={() => openModal(ds)}>+ Ajouter un aliment</button>
+  <!-- Historique -->
+  {#if recentDays.filter((ds) => ds !== todayKey).length}
+    <div class="section-label">Historique</div>
+  {/if}
+  {#each recentDays.filter((ds) => ds !== todayKey) as ds}
+    {@const day = days[ds] ?? { foods: [] }}
+    {@const kcal = dayKcal(day)}
+    <div class="card hist-card-n">
+      <div class="hist-summary">
+        <span class="hist-date">{frDate(ds)}</span>
+        <span class="hist-kcal" style="color:{kcal === 0 ? 'var(--c-text2)' : (kcal <= todayTarget ? 'var(--c-green)' : 'var(--c-red)')}">{Math.round(kcal)} kcal</span>
+        {#if todayTarget > 0}<span class="hist-cible">/ {todayTarget}</span>{/if}
+      </div>
+      <div class="hist-foods">
+        {#each day.foods ?? [] as f, fi}
+          <div class="hist-food-row">
+            <span class="food-n">{f.n}</span>
+            <span class="food-k">{Math.round(f.k)} kcal</span>
+            <button class="food-del" onclick={() => removeFood(ds, fi)} aria-label="Supprimer">×</button>
+          </div>
+        {/each}
+        <button class="hist-add-btn" onclick={() => openModal(ds)}>+ Ajouter un aliment</button>
+      </div>
     </div>
   {/each}
   <div style="height:8px"></div>
@@ -355,4 +371,28 @@
 
   .header-eyebrow { font-size:11px; font-weight:600; letter-spacing:.07em; color:var(--c-text3); text-transform:uppercase; }
   .build { font-size:11px !important; }
+
+  /* Repas du jour + historique (style FitProUX) */
+  .foods-card { padding:16px; margin-bottom:10px; }
+  .foods-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+  .add-pill { padding:6px 14px; border:none; border-radius:20px; background:var(--c-accent); color:var(--c-accent-fg); font-size:12px; font-weight:600; cursor:pointer; font-family:var(--font); }
+  .foods-empty { font-size:13px; color:var(--c-text3); text-align:center; padding:12px 0; }
+  .foods-list { display:flex; flex-direction:column; gap:0; }
+  .food-item { display:flex; align-items:center; gap:8px; padding:8px 0; border-bottom:0.5px solid var(--c-border); }
+  .food-n { flex:1; font-size:13px; color:var(--c-text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .food-k { font-size:12px; font-weight:500; color:var(--c-text2); flex-shrink:0; }
+  .food-del { border:none; background:none; color:var(--c-text3); cursor:pointer; padding:2px 4px; font-size:16px; line-height:1; }
+  .food-del:hover { color:#e05; }
+  .foods-total { display:flex; justify-content:space-between; padding:8px 0 0; font-size:13px; color:var(--c-text2); font-weight:500; }
+  .total-k { color:var(--c-accent); font-weight:600; }
+  .section-label { font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--c-text3); margin:14px 0 8px; }
+  .hist-card-n { padding:0; margin-bottom:6px; overflow:hidden; }
+  .hist-summary { display:flex; align-items:center; gap:8px; padding:12px 14px; }
+  .hist-date { flex:1; font-size:13px; font-weight:500; color:var(--c-text); text-transform:capitalize; }
+  .hist-kcal { font-size:13px; font-weight:600; flex-shrink:0; }
+  .hist-cible { font-size:11px; color:var(--c-text3); flex-shrink:0; }
+  .hist-foods { padding:0 14px 12px; display:flex; flex-direction:column; gap:0; border-top:0.5px solid var(--c-border); }
+  .hist-food-row { display:flex; justify-content:space-between; align-items:center; gap:8px; padding:7px 0; border-bottom:0.5px solid var(--c-border); }
+  .hist-food-row:last-of-type { border-bottom:none; }
+  .hist-add-btn { width:100%; padding:8px; border:1px dashed var(--c-border); border-radius:8px; background:none; color:var(--c-accent); font-size:13px; cursor:pointer; font-family:var(--font); margin-top:6px; }
 </style>
