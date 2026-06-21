@@ -9,7 +9,7 @@
     dayKcal, dayExpend, dstr, frDate, frShort, parseDS
   } from './calc';
 
-  const BUILD = 'V2.5';
+  const BUILD = 'V2.6';
   const SUPABASE_URL = 'https://arydsxswhbgpfayjgtak.supabase.co';
 
   const today = new Date();
@@ -30,14 +30,28 @@
   const days = $derived(data.days ?? {});
 
   // Message de bienvenue personnalisé
-  const userEmail = $derived(($session?.user?.email ?? '').toLowerCase());
-  const isSophie = $derived(userEmail === 'ninagundaz2@gmail.com');
 
   // Today
   const todayDay = $derived(days[todayKey] ?? { weight: '', act: profile.act || '1.30', sport: null, foods: [] });
   const todayKcal = $derived(dayKcal(todayDay));
   const todayTarget = $derived(targetIntake(profile));
   const todayReste = $derived(todayTarget - todayKcal);
+
+  // Macros du jour + cibles (split 30/40/30 sur la cible kcal)
+  const todayMacros = $derived((() => {
+    const f = (days[todayKey]?.foods ?? []);
+    return {
+      p: f.reduce((s, x) => s + num(x.p), 0),
+      g: f.reduce((s, x) => s + num(x.g), 0),
+      l: f.reduce((s, x) => s + num(x.l), 0),
+    };
+  })());
+  const macroTarget = $derived({
+    p: Math.round(todayTarget * 0.30 / 4),
+    g: Math.round(todayTarget * 0.40 / 4),
+    l: Math.round(todayTarget * 0.30 / 9),
+  });
+  const mpct = (a, b) => b > 0 ? Math.min(100, Math.round(a / b * 100)) : 0;
 
   // Goal & progression
   const goal = $derived(goalCalc(profile));
@@ -160,10 +174,6 @@
     <div class="header-title">FitNoob<span class="x">X</span></div>
   </div>
 
-  {#if isSophie}
-    <div class="card greeting-card">n'oublies pas de mettre les calories du coulant au chocolat🤓</div>
-  {/if}
-
   <!-- Barre de progression objectif -->
   {#if goal}
     <div class="card prog-card">
@@ -204,6 +214,24 @@
       {#if coachError}<span class="coach-err">{coachError}</span>{/if}
     </div>
   {/if}
+
+  <!-- Macros du jour -->
+  <div class="macro-row">
+    {#each [
+      { key: 'p', label: 'PROTÉINES', color: 'var(--c-accent)', cible: macroTarget.p },
+      { key: 'g', label: 'GLUCIDES',  color: 'var(--c-blue)',   cible: macroTarget.g },
+      { key: 'l', label: 'LIPIDES',   color: 'var(--c-red)',    cible: macroTarget.l },
+    ] as m}
+      {@const actual = Math.round(todayMacros[m.key])}
+      <div class="card macro-card">
+        <div class="label">{m.label}</div>
+        <div class="progress-bar" style="margin:10px 0 8px">
+          <div class="progress-fill" style="width:{mpct(actual, m.cible)}%;background:{m.color}"></div>
+        </div>
+        <div class="macro-val">{actual}<span class="macro-target">/{m.cible}g</span></div>
+      </div>
+    {/each}
+  </div>
 
   <!-- Day cards -->
   {#each recentDays as ds}
@@ -312,4 +340,9 @@
   :global(html[data-theme='light']) .hero-goal .hero-label,
   :global(html[data-theme='light']) .hero-goal .hero-goal-val,
   :global(html[data-theme='light']) .hero-goal .hero-sub { color:#1a1a1a; }
+
+  .macro-row { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:8px; }
+  .macro-card { padding:14px; }
+  .macro-val { font-size:18px; font-weight:600; color:var(--c-text); }
+  .macro-target { font-size:11px; font-weight:400; color:var(--c-text3); }
 </style>
