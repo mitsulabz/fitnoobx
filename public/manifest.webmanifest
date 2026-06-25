@@ -1,14 +1,16 @@
 {
-  "name": "FitProUX",
-  "short_name": "FitProUX",
-  "description": "Suivi nutrition & programme sportif",
+  "name": "FitNoobX",
+  "short_name": "FitNoobX",
+  "description": "Suivi nutrition & santé",
   "start_url": "/fitnoobx/",
   "scope": "/fitnoobx/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#0d0d0d",
-  "theme_color": "#0d0d0d",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
   "icons": [
-    { "src": "/fitnoobx/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+    { "src": "/fitnoobx/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/fitnoobx/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/fitnoobx/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
   ]
 }
