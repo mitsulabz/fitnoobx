@@ -9,7 +9,7 @@
     dayKcal, dayExpend, dstr, frDate, frShort, parseDS
   } from './calc';
 
-  const BUILD = 'V3.8';
+  const BUILD = 'V3.9';
   const SUPABASE_URL = 'https://arydsxswhbgpfayjgtak.supabase.co';
 
   const today = new Date();
@@ -125,22 +125,15 @@
   }));
 
   const recentDays = $derived((() => {
-    const seen = new Set<string>();
+    // Liste continue de tous les jours du 1er jour saisi (J1) jusqu'à aujourd'hui,
+    // jours vides inclus (affichés « non comptabilisée ») pour ne perdre aucun jour.
     const result: string[] = [];
     const floor = firstLogged ? parseDS(firstLogged).getTime() : today.getTime();
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 366; i++) {
       const d = new Date(today);
       d.setDate(today.getDate() - i);
       if (d.getTime() < floor) break; // pas avant le 1er jour saisi
-      const k = dstr(d);
-      seen.add(k);
-      result.push(k);
-    }
-    const older = [...allKeys].reverse().filter(k => !seen.has(k));
-    for (const k of older) {
-      const day = days[k];
-      if (day?.foods?.length || day?.weight) result.push(k);
-      if (result.length >= 21) break;
+      result.push(dstr(d));
     }
     return result;
   })());
