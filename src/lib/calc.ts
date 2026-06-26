@@ -54,16 +54,17 @@ export function calcTDEE(profile: any): number {
 
 export const DEFICIT_PCT = 0.20;
 
-export function deficitFor(tdee: number, sex: string): number {
-  const minIntake = sex === 'f' ? 1200 : 1500;
-  const maxDef = tdee - minIntake;
+export function deficitFor(profile: any, tdee: number): number {
+  // Plancher de sécurité : ne jamais manger sous le métabolisme de base (BMR)
+  const floor = calcBMR(profile) || (profile.sex === 'f' ? 1200 : 1500);
+  const maxDef = tdee - floor;
   return Math.min(Math.round(tdee * DEFICIT_PCT), Math.max(0, maxDef));
 }
 
 export function targetIntake(profile: any): number {
   const tdee = calcTDEE(profile);
   if (!tdee) return 0;
-  const deficit = deficitFor(tdee, profile.sex || 'h');
+  const deficit = deficitFor(profile, tdee);
   return tdee - deficit;
 }
 
@@ -73,7 +74,7 @@ export function goalCalc(profile: any): { kcalToLose: number; rate: number; goal
   const tdee = calcTDEE(profile);
   if (!tdee) return null;
   const sex = profile.sex || 'h';
-  const deficit = deficitFor(tdee, sex);
+  const deficit = deficitFor(profile, tdee);
   let goalW = 0;
   if (profile.goalMode === 'bf') {
     const bft = num(profile.bft), bf = num(profile.bf);

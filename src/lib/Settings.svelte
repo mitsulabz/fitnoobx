@@ -70,7 +70,7 @@
   const bmr = $derived(calcBMR(profile));
   const tdee = $derived(calcTDEE(profile));
   const cible = $derived(targetIntake(profile));
-  const deficit = $derived(tdee ? deficitFor(tdee, profile.sex || 'h') : 0);
+  const deficit = $derived(tdee ? deficitFor(profile, tdee) : 0);
 
   // Coach IA
   let coachLoading = $state(false);
@@ -268,7 +268,7 @@
     </button>
   </div>
 
-  <div class="version">FitNoobX · V3.2</div>
+  <div class="version">FitNoobX · V3.3</div>
 </div>
 
 <style>
