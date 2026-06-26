@@ -9,7 +9,7 @@
     dayKcal, dayExpend, dstr, frDate, frShort, parseDS
   } from './calc';
 
-  const BUILD = 'V3.4';
+  const BUILD = 'V3.5';
   const SUPABASE_URL = 'https://arydsxswhbgpfayjgtak.supabase.co';
 
   const today = new Date();
@@ -63,7 +63,8 @@
 
   const cumDeficit = $derived(allKeys.reduce((s, k) => {
     const d = days[k];
-    if (!d?.foods?.length && !d?.weight) return s;
+    // Pas d'aliment saisi = journée non comptée (neutre), même si un poids est renseigné
+    if (!d?.foods?.length) return s;
     return s + dayExpend(d, profile) - dayKcal(d);
   }, 0));
 
