@@ -221,20 +221,6 @@
   {/if}
 
 
-  <!-- Coach IA -->
-  <div class="section-title">Coach IA</div>
-  <div class="section">
-    <button class="card setting-row" onclick={runCoach} disabled={coachLoading}>
-      <span class="body">{coachLoading ? 'Analyse en cours…' : '🤖 Demander un bilan'}</span>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
-    </button>
-    {#if coachResult}
-      <div class="card coach-result">{coachResult}</div>
-    {/if}
-    {#if coachError}
-      <div class="coach-error">{coachError}</div>
-    {/if}
-  </div>
 
   <!-- Apparence -->
   <div class="section-title">Apparence</div>
@@ -268,7 +254,7 @@
     </button>
   </div>
 
-  <div class="version">FitNoobX · V3.3</div>
+  <div class="version">FitNoobX · V3.4</div>
 </div>
 
 <style>
