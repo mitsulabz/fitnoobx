@@ -16,7 +16,6 @@
     profile: { age: 0, sex: 'h', height: 0, weight: 0, bf: 0, bft: 0, act: '1.30', sportHours: 0, goalMode: 'weight', goalWeight: 0 },
     days: {},
     favorites: [],
-    sports: [],
     _ts: 0,
   };
 

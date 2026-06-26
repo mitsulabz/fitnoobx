@@ -243,7 +243,7 @@
             {@const tds = todayDS()}
             {@const cum = Object.entries(modalData.days ?? {}).reduce((acc: number, [ds, d]: [string, any]) => {
               if (dsToDate(ds) >= dsToDate(tds) || !d.foods?.length) return acc;
-              const sport = d.sport ? num(d.sport.kcal) : 0;
+              const sport = Math.round((num(p.sportHours) * 500) / 7);
               const exp = Math.round(bmr * actFactor(d.act ?? p.act ?? '1.30')) + sport;
               return acc + (exp - Math.round(d.foods.reduce((s: number, f: any) => s + f.k, 0)));
             }, 0)}
@@ -263,7 +263,7 @@
           <div class="section-title" style="margin-top:14px">Aujourd'hui</div>
           {#if td?.foods?.length}
             {@const k = Math.round(td.foods.reduce((s: number, f: any) => s + f.k, 0))}
-            {@const exp = bmr ? Math.round(bmr * actFactor(td.act ?? p.act ?? '1.30')) + (td.sport ? num(td.sport.kcal) : 0) : 0}
+            {@const exp = bmr ? Math.round(bmr * actFactor(td.act ?? p.act ?? '1.30')) + Math.round((num(p.sportHours) * 500) / 7) : 0}
             {@const def = exp - k}
             <div class="today-row">
               <div class="kpi"><div class="kpi-v">{k}</div><div class="kpi-l">Ingéré kcal</div></div>
@@ -281,7 +281,7 @@
               {@const d = (modalData.days ?? {})[ds]}
               {@const foods = d.foods ?? []}
               {@const k = Math.round(foods.reduce((s: number, f: any) => s + f.k, 0))}
-              {@const exp = bmr ? Math.round(bmr * actFactor(p.act ?? '1.30')) + (d.sport ? num(d.sport.kcal) : 0) : 0}
+              {@const exp = bmr ? Math.round(bmr * actFactor(p.act ?? '1.30')) + Math.round((num(p.sportHours) * 500) / 7) : 0}
               {@const def = exp - k}
               <details class="hist-day">
                 <summary class="hist-summary">

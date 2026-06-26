@@ -10,7 +10,6 @@
 
   const data = $derived($appData as any ?? {});
   const profile = $derived(data.profile ?? {});
-  const sports = $derived(data.sports ?? []);
 
   // Profile form state
   let fAge = $state('');
@@ -73,34 +72,6 @@
   const cible = $derived(targetIntake(profile));
   const deficit = $derived(tdee ? deficitFor(tdee, profile.sex || 'h') : 0);
 
-  // Sports presets
-  let newSportName = $state('');
-  let newSportKcal = $state('');
-
-  function addSport() {
-    if (!newSportName.trim() || !newSportKcal) return;
-    const s = get(session);
-    const d = get(appData) as any;
-    if (!s || !d) return;
-    const newSports = [...(d.sports ?? []), { name: newSportName.trim(), kcal: parseInt(newSportKcal) }];
-    const newData = { ...d, sports: newSports };
-    appData.set(newData);
-    scheduleSync(s, newData);
-    newSportName = '';
-    newSportKcal = '';
-  }
-
-  function removeSport(i: number) {
-    const s = get(session);
-    const d = get(appData) as any;
-    if (!s || !d) return;
-    const newSports = [...(d.sports ?? [])];
-    newSports.splice(i, 1);
-    const newData = { ...d, sports: newSports };
-    appData.set(newData);
-    scheduleSync(s, newData);
-  }
-
   // Coach IA
   let coachLoading = $state(false);
   let coachResult = $state('');
@@ -134,7 +105,7 @@
     const dayLines = keys.map((k: string) => {
       const day = days[k];
       const kcal = (day.foods ?? []).reduce((s: number, f: any) => s + (f.k||0), 0);
-      return `${k}: ${Math.round(kcal)} kcal${day.weight ? ', poids '+day.weight+'kg' : ''}${day.sport ? ', sport '+day.sport.kcal+'kcal' : ''}`;
+      return `${k}: ${Math.round(kcal)} kcal${day.weight ? ', poids '+day.weight+'kg' : ''}`;
     }).join('\n');
     return `Profil: ${p.age}ans, ${p.sex==='h'?'homme':'femme'}, ${p.height}cm, ${p.weight}kg, ${p.bf}%MG, act×${p.act}, ${p.sportHours}h sport/sem\n\n7 derniers jours:\n${dayLines}`;
   }
@@ -264,22 +235,6 @@
     </div>
   {/if}
 
-  <!-- Sports presets -->
-  <div class="section-title">Sports préenregistrés</div>
-  <div class="section">
-    {#each sports as sport, i}
-      <div class="card setting-row">
-        <span class="body">{sport.name}</span>
-        <span class="caption">{sport.kcal} kcal/h</span>
-        <button class="del-btn" onclick={() => removeSport(i)}>×</button>
-      </div>
-    {/each}
-    <div class="card add-sport-row">
-      <input type="text" placeholder="Nom du sport" bind:value={newSportName} class="sport-name-in" />
-      <input type="number" placeholder="kcal/h" bind:value={newSportKcal} class="sport-kcal-in" />
-      <button class="btn-accent-sm" onclick={addSport}>+</button>
-    </div>
-  </div>
 
   <!-- Coach IA -->
   <div class="section-title">Coach IA</div>
@@ -328,7 +283,7 @@
     </button>
   </div>
 
-  <div class="version">FitNoobX · V3.0</div>
+  <div class="version">FitNoobX · V3.1</div>
 </div>
 
 <style>
@@ -362,10 +317,6 @@
   .caption { font-size:12px; color:var(--c-text3); }
   .del-btn { border:none; background:none; color:var(--c-text3); font-size:18px; cursor:pointer; padding:0 4px; }
 
-  /* Sports */
-  .add-sport-row { display:flex; gap:8px; align-items:center; }
-  .sport-name-in { flex:1; padding:8px 10px; border:1px solid var(--c-border); border-radius:var(--r-md); background:var(--c-bg); color:var(--c-text); font-size:13px; font-family:var(--font); }
-  .sport-kcal-in { width:70px; padding:8px 10px; border:1px solid var(--c-border); border-radius:var(--r-md); background:var(--c-bg); color:var(--c-text); font-size:13px; font-family:var(--font); }
   .btn-accent-sm { width:36px; height:36px; border:none; border-radius:50%; background:var(--c-accent); color:var(--c-accent-fg); font-size:20px; font-weight:300; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
 
   /* Coach */

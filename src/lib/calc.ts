@@ -1,21 +1,21 @@
 // Calculs nutritionnels FitNoob (Katch-McArdle / Mifflin-St-Jeor)
 
 export const ACT_LEVELS = [
-  { key: '1.10', label: 'Sédentaire strict',     desc: 'Assis toute la journée, peu ou pas debout' },
-  { key: '1.20', label: 'Très peu actif',         desc: 'Quelques marches légères (< 5 000 pas/j)' },
-  { key: '1.30', label: 'Légèrement actif',       desc: 'Debout régulièrement, 5–8 000 pas/j' },
-  { key: '1.40', label: 'Modérément actif',       desc: 'Marches quotidiennes, travail debout, 8–10k pas' },
-  { key: '1.55', label: 'Actif',                  desc: 'Activité physique modérée la plupart des jours' },
-  { key: '1.70', label: 'Très actif',             desc: 'Travail physique ou entraînements intensifs quotidiens' },
-  { key: '1.90', label: 'Extrêmement actif',      desc: 'Travail très physique + sport intensif quotidien' },
-  { key: '2.00', label: 'Athlète',               desc: 'Entraînements 2×/jour ou sport professionnel' },
+  { key: '1.10', label: 'Bloqué au lit',                       desc: 'maladie, < 2 000 pas/j' },
+  { key: '1.20', label: 'Canap / bureau / voiture',            desc: 'très sédentaire · 2–4k pas/j' },
+  { key: '1.30', label: 'Courses, tâches ménagères légères',   desc: 'bouge un peu · 4–6k pas/j' },
+  { key: '1.40', label: "S'active quotidiennement",            desc: 'beaucoup de déplacements · 6–9k pas/j' },
+  { key: '1.50', label: 'Travail debout / bouge tout le temps', desc: 'marche régulière · 9–12k pas/j' },
+  { key: '1.60', label: 'Métier physique léger',               desc: 'très actif · >12k pas/j' },
+  { key: '1.75', label: 'Métier physique dur',                 desc: 'artisan, manutention, serveur actif' },
+  { key: '2.00', label: "Bouge autant qu'un sportif pro",      desc: 'agriculture, chantier, sport pro' },
 ];
 
 export function num(v: unknown): number { const n = parseFloat(v as string); return isNaN(n) ? 0 : n; }
 export function round1(x: number): number { return Math.round(x * 10) / 10; }
 
 export function migrateAct(k: string): string {
-  const m: Record<string, string> = { sed: '1.20', act: '1.40', sup: '1.60' };
+  const m: Record<string, string> = { sed: '1.20', act: '1.40', sup: '1.60', '1.55': '1.50', '1.70': '1.75', '1.90': '2.00' };
   return m[k] || k;
 }
 
@@ -39,9 +39,10 @@ export function calcBMR(profile: any): number {
 }
 
 export function dailySportEstimate(profile: any): number {
-  const w = num(profile.weight), h = num(profile.sportHours);
-  if (!w || !h) return 0;
-  return Math.round((h * 6 * w) / 7);
+  // 1 h de sport = 500 kcal, réparti sur les 7 jours de la semaine
+  const h = num(profile.sportHours);
+  if (!h) return 0;
+  return Math.round((h * 500) / 7);
 }
 
 export function calcTDEE(profile: any): number {
@@ -89,11 +90,10 @@ export function dayKcal(day: any): number {
 }
 
 export function dayExpend(day: any, profile: any): number {
-  const sport = day?.sport ? num(day.sport.kcal) : 0;
   const bmr = calcBMR(profile);
   const act = migrateAct(day?.act || profile?.act || '1.30');
   const base = bmr ? Math.round(bmr * actFactor(act)) : 0;
-  return base + sport;
+  return base + dailySportEstimate(profile);
 }
 
 export function dstr(d: Date): string {

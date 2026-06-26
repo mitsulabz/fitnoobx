@@ -9,7 +9,7 @@
     dayKcal, dayExpend, dstr, frDate, frShort, parseDS
   } from './calc';
 
-  const BUILD = 'V3.0';
+  const BUILD = 'V3.1';
   const SUPABASE_URL = 'https://arydsxswhbgpfayjgtak.supabase.co';
 
   const today = new Date();
@@ -36,7 +36,7 @@
   // Message de bienvenue personnalisé
 
   // Today
-  const todayDay = $derived(days[todayKey] ?? { weight: '', act: profile.act || '1.30', sport: null, foods: [] });
+  const todayDay = $derived(days[todayKey] ?? { weight: '', act: profile.act || '1.30', foods: [] });
   const todayKcal = $derived(dayKcal(todayDay));
   const todayTarget = $derived(targetIntake(profile));
   const todayReste = $derived(todayTarget - todayKcal);
@@ -120,7 +120,7 @@
   // Premier jour effectivement saisi (plancher : on ne remonte pas avant)
   const firstLogged = $derived(allKeys.find(k => {
     const d = days[k];
-    return d?.foods?.length || d?.weight || d?.sport;
+    return d?.foods?.length || d?.weight;
   }));
 
   const recentDays = $derived((() => {
@@ -138,7 +138,7 @@
     const older = [...allKeys].reverse().filter(k => !seen.has(k));
     for (const k of older) {
       const day = days[k];
-      if (day?.foods?.length || day?.weight || day?.sport) result.push(k);
+      if (day?.foods?.length || day?.weight) result.push(k);
       if (result.length >= 21) break;
     }
     return result;
