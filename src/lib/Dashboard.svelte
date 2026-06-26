@@ -9,7 +9,7 @@
     dayKcal, dayExpend, dstr, frDate, frShort, parseDS
   } from './calc';
 
-  const BUILD = 'V3.7';
+  const BUILD = 'V3.8';
   const SUPABASE_URL = 'https://arydsxswhbgpfayjgtak.supabase.co';
 
   const today = new Date();
@@ -286,15 +286,19 @@
     {@const mp = (day.foods ?? []).reduce((s, f) => s + num(f.p), 0)}
     {@const mg = (day.foods ?? []).reduce((s, f) => s + num(f.g), 0)}
     {@const ml = (day.foods ?? []).reduce((s, f) => s + num(f.l), 0)}
-    <div class="card hist-card-n">
-      <div class="hist-summary">
-        <span class="hist-date">{frDate(ds)}</span>
-        <span class="hist-kcal" style="color:{kcal === 0 ? 'var(--c-text2)' : (kcal <= exp ? 'var(--c-green)' : 'var(--c-red)')}">{Math.round(kcal)} kcal</span>
-        {#if exp > 0}<span class="hist-cible">/ {exp}</span>{/if}
-      </div>
-      {#if kcal > 0}
-        <div class="hist-macros">P {Math.round(mp)}g · G {Math.round(mg)}g · L {Math.round(ml)}g{#if exp > 0} · {#if def > 50}<span style="color:var(--c-green)">déficit −{Math.round(def)}</span>{:else if def < -50}<span style="color:var(--c-red)">surplus +{Math.round(-def)}</span>{:else}<span style="color:#3b82f6">neutre</span>{/if}{/if}</div>
-      {/if}
+    <details class="card hist-card-n">
+      <summary class="hist-summary">
+        <div class="hist-top">
+          <span class="hist-date">{frDate(ds)}</span>
+          <span class="hist-kcal" style="color:{kcal === 0 ? 'var(--c-blue)' : (kcal <= exp ? 'var(--c-green)' : 'var(--c-red)')}">{Math.round(kcal)} kcal</span>
+          {#if exp > 0}<span class="hist-cible">/ {exp}</span>{/if}
+        </div>
+        {#if kcal > 0}
+          <div class="hist-macros">P {Math.round(mp)}g · G {Math.round(mg)}g · L {Math.round(ml)}g{#if exp > 0} · {#if def > 50}<span style="font-weight:600;color:var(--c-green)">déficit −{Math.round(def)}</span>{:else if def < -50}<span style="font-weight:600;color:var(--c-red)">surplus +{Math.round(-def)}</span>{:else}<span style="font-weight:600;color:var(--c-blue)">neutre</span>{/if}{/if}</div>
+        {:else}
+          <div class="hist-macros"><span style="font-weight:600;color:var(--c-blue)">non comptabilisée</span></div>
+        {/if}
+      </summary>
       <div class="hist-foods">
         {#each day.foods ?? [] as f, fi}
           <div class="hist-food-row">
@@ -305,7 +309,7 @@
         {/each}
         <button class="hist-add-btn" onclick={() => openModal(ds)}>+ Ajouter un aliment</button>
       </div>
-    </div>
+    </details>
   {/each}
   <div style="height:8px"></div>
 </div>
@@ -407,7 +411,9 @@
   .total-k { color:var(--c-accent); font-weight:600; }
   .section-label { font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--c-text3); margin:14px 0 8px; }
   .hist-card-n { padding:0; margin-bottom:6px; overflow:hidden; }
-  .hist-summary { display:flex; align-items:center; gap:8px; padding:12px 14px; }
+  .hist-summary { display:flex; flex-direction:column; gap:3px; padding:12px 14px; cursor:pointer; list-style:none; }
+  .hist-summary::-webkit-details-marker { display:none; }
+  .hist-top { display:flex; align-items:center; gap:8px; }
   .hist-date { flex:1; font-size:13px; font-weight:500; color:var(--c-text); text-transform:capitalize; }
   .hist-kcal { font-size:13px; font-weight:600; flex-shrink:0; }
   .hist-cible { font-size:11px; color:var(--c-text3); flex-shrink:0; }

@@ -254,7 +254,7 @@
     </button>
   </div>
 
-  <div class="version">FitNoobX · V3.7</div>
+  <div class="version">FitNoobX · V3.8</div>
 </div>
 
 <style>
