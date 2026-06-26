@@ -9,7 +9,7 @@
     dayKcal, dayExpend, dstr, frDate, frShort, parseDS
   } from './calc';
 
-  const BUILD = 'V3.5';
+  const BUILD = 'V3.6';
   const SUPABASE_URL = 'https://arydsxswhbgpfayjgtak.supabase.co';
 
   const today = new Date();
@@ -151,6 +151,17 @@
     if (!s) return;
     appData.set(newData);
     scheduleSync(s, newData);
+  }
+
+  function getOrCreateDay(dk: string) {
+    const d = get(appData) as any;
+    return d?.days?.[dk] ?? { weight: '', act: profile.act || '1.30', foods: [] };
+  }
+
+  function updateDay(dk: string, patch: any) {
+    const d = get(appData) as any;
+    const day = getOrCreateDay(dk);
+    save({ ...d, days: { ...(d?.days ?? {}), [dk]: { ...day, ...patch } } });
   }
 
 
