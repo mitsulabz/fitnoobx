@@ -9,7 +9,7 @@
     dayKcal, dayExpend, dstr, frDate, frShort, parseDS
   } from './calc';
 
-  const BUILD = 'V3.6';
+  const BUILD = 'V3.7';
   const SUPABASE_URL = 'https://arydsxswhbgpfayjgtak.supabase.co';
 
   const today = new Date();
@@ -281,12 +281,20 @@
   {#each recentDays.filter((ds) => ds !== todayKey) as ds}
     {@const day = days[ds] ?? { foods: [] }}
     {@const kcal = dayKcal(day)}
+    {@const exp = dayExpend(day, profile)}
+    {@const def = exp - kcal}
+    {@const mp = (day.foods ?? []).reduce((s, f) => s + num(f.p), 0)}
+    {@const mg = (day.foods ?? []).reduce((s, f) => s + num(f.g), 0)}
+    {@const ml = (day.foods ?? []).reduce((s, f) => s + num(f.l), 0)}
     <div class="card hist-card-n">
       <div class="hist-summary">
         <span class="hist-date">{frDate(ds)}</span>
-        <span class="hist-kcal" style="color:{kcal === 0 ? 'var(--c-text2)' : (kcal <= todayTarget ? 'var(--c-green)' : 'var(--c-red)')}">{Math.round(kcal)} kcal</span>
-        {#if todayTarget > 0}<span class="hist-cible">/ {todayTarget}</span>{/if}
+        <span class="hist-kcal" style="color:{kcal === 0 ? 'var(--c-text2)' : (kcal <= exp ? 'var(--c-green)' : 'var(--c-red)')}">{Math.round(kcal)} kcal</span>
+        {#if exp > 0}<span class="hist-cible">/ {exp}</span>{/if}
       </div>
+      {#if kcal > 0}
+        <div class="hist-macros">P {Math.round(mp)}g · G {Math.round(mg)}g · L {Math.round(ml)}g{#if exp > 0} · {#if def > 50}<span style="color:var(--c-green)">déficit −{Math.round(def)}</span>{:else if def < -50}<span style="color:var(--c-red)">surplus +{Math.round(-def)}</span>{:else}<span style="color:#3b82f6">neutre</span>{/if}{/if}</div>
+      {/if}
       <div class="hist-foods">
         {#each day.foods ?? [] as f, fi}
           <div class="hist-food-row">
@@ -403,6 +411,7 @@
   .hist-date { flex:1; font-size:13px; font-weight:500; color:var(--c-text); text-transform:capitalize; }
   .hist-kcal { font-size:13px; font-weight:600; flex-shrink:0; }
   .hist-cible { font-size:11px; color:var(--c-text3); flex-shrink:0; }
+  .hist-macros { padding:0 14px 10px; font-size:11px; color:var(--c-text3); }
   .hist-foods { padding:0 14px 12px; display:flex; flex-direction:column; gap:0; border-top:0.5px solid var(--c-border); }
   .hist-food-row { display:flex; justify-content:space-between; align-items:center; gap:8px; padding:7px 0; border-bottom:0.5px solid var(--c-border); }
   .hist-food-row:last-of-type { border-bottom:none; }
