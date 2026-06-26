@@ -9,7 +9,7 @@
     dayKcal, dayExpend, dstr, frDate, frShort, parseDS
   } from './calc';
 
-  const BUILD = 'V3.1';
+  const BUILD = 'V3.2';
   const SUPABASE_URL = 'https://arydsxswhbgpfayjgtak.supabase.co';
 
   const today = new Date();

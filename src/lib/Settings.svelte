@@ -54,7 +54,7 @@
       bft: parseFloat(fBft) || 0,
       act: fAct,
       sportHours: parseFloat(fSportH) || 0,
-      goalMode: fGoalMode,
+      goalMode: 'bf',
       goalWeight: parseFloat(fGoalWeight) || 0,
     };
     const newData = { ...d, profile: newProfile };
@@ -197,25 +197,10 @@
         {/each}
       </select>
     </div>
-    <div class="field-row">
-      <div class="field">
-        <label>Heures sport / sem.</label>
-        <input type="number" min="0" max="30" step="0.5" placeholder="3" bind:value={fSportH} />
-      </div>
-      <div class="field">
-        <label>Mode objectif</label>
-        <select bind:value={fGoalMode}>
-          <option value="weight">Poids cible</option>
-          <option value="bf">% MG cible</option>
-        </select>
-      </div>
+    <div class="field">
+      <label>Heures sport / sem.</label>
+      <input type="number" min="0" max="30" step="0.5" placeholder="3" bind:value={fSportH} />
     </div>
-    {#if fGoalMode === 'weight'}
-      <div class="field">
-        <label>Poids cible (kg)</label>
-        <input type="number" min="30" max="200" step="0.1" placeholder="75" bind:value={fGoalWeight} />
-      </div>
-    {/if}
     <button class="btn-accent" onclick={saveProfile}>
       {profileSaved ? '✓ Enregistré' : 'Enregistrer le profil'}
     </button>
@@ -283,7 +268,7 @@
     </button>
   </div>
 
-  <div class="version">FitNoobX · V3.1</div>
+  <div class="version">FitNoobX · V3.2</div>
 </div>
 
 <style>
